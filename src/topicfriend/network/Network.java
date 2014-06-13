@@ -346,6 +346,10 @@ public class Network
 	
 	public static synchronized void sendDataOne(ByteArrayBuffer buf,int connection)
 	{
+		//DEBUG:
+		String sendStr=new String(buf.buffer());
+		System.out.println("connection "+connection+" send:"+sendStr);
+		
 		Socket socket=getSocketByConnection(connection);
 		assert(socket!=null);
 		

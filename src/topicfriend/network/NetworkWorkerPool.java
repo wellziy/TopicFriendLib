@@ -332,15 +332,14 @@ public class NetworkWorkerPool
 		return s_badSockets;
 	}
 	
-	//private methods
-	private static int packInt(byte[] networkByte)
+	public static int packInt(byte[] networkByte)
 	{
-		int res=(networkByte[0]<<24)+(networkByte[1]<<16)
-				+(networkByte[2]<<8)+(networkByte[3]<<0);
+		int res=((networkByte[0]&0xff)<<24)+((networkByte[1]&0xff)<<16)
+				+((networkByte[2]&0xff)<<8)+((networkByte[3]&0xff)<<0);
 		return res;
 	}
 	
-	private static byte[] unpackInt(int value)
+	public static byte[] unpackInt(int value)
 	{
 		byte[] res=new byte[4];
 		res[0]=(byte) ((value>>24)&0xff);
@@ -351,6 +350,7 @@ public class NetworkWorkerPool
 		return res;
 	}
 	
+	//private methods
 	private static boolean receiveWithTimeout(Socket socket,ByteArrayBuffer buf,int len,int eachTimeout,int totalTimeout)
 	{
 		long totalCounter=0;
@@ -418,7 +418,9 @@ public class NetworkWorkerPool
 		}
 		
 		int size=packInt(header.toByteArray());
-		System.out.println("receive buffer with size: "+size);
+		//DEBUG:
+		System.out.println("detect packet with size:"+size);
+
 		ByteArrayBuffer content=new ByteArrayBuffer(size+100);
 		boolean isContentOK=receiveWithTimeout(socket, content, size, 3000, 30000);
 		if(!isContentOK)
@@ -435,6 +437,7 @@ public class NetworkWorkerPool
 	
 	private static boolean sendNetworkBuffer(NetworkBuffer buf)
 	{
+		System.out.println("begin send buffer:"+buf.content.length());
 		Socket socket=buf.socket;
 		
 		try
@@ -446,7 +449,7 @@ public class NetworkWorkerPool
 			outputStream.write(buf.content.buffer(),0,len);
 			outputStream.flush();
 			
-			System.out.println("finished send one buffer with size:"+len);
+			System.out.println("finish send buffer:"+len);
 		} 
 		catch (IOException e) 
 		{

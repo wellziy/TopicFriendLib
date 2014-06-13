@@ -56,6 +56,7 @@ public class NetMessage
 		}
 		catch (Exception e) 
 		{
+			System.out.println("failed to parse string to net message:"+str);
 			e.printStackTrace();
 		}
 		
