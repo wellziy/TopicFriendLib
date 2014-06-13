@@ -177,9 +177,13 @@ public class Network
 		return s_serverSocket!=null&&s_isServerActive==true;
 	}
 	
+	//Connects this socket to the server with a specified timeout value. 
+	//A timeout of zero is interpreted as an infinite timeout. 
+	//The connection will then block until established or an error occurs.
 	public static synchronized int connectHostPort(String host,int port,int timeout) throws IOException
 	{
-		Socket socket=new Socket(host,port);
+		Socket socket=new Socket();
+		socket.connect(new InetSocketAddress(host, port),timeout);
 		
 		OutputStream outputStream = socket.getOutputStream();
 		byte[] handshakeByte=new byte[4];
